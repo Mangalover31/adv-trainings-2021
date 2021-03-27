@@ -62,7 +62,14 @@ std::array<unsigned char, 4> encode_output(const Output &raw) {
 }
 
 std::optional<Output> decode_output(const std::array<unsigned char, 4> &raw) {
+  if (raw[3] != 0xFE) {
+    return std::nullopt;
+  }
   Output ret;
+  ret.dt_left_voltage = ((raw[3] * 24) / 254) - 12;
+  ret.dt_left_voltage = ((raw[2] * 24) / 254) - 12;
+  ret.dt_left_voltage = ((raw[1] * 24) / 254) - 12;
+  ret.dt_left_voltage = raw[0];
   return std::optional(ret);
 }
 
