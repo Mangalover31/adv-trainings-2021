@@ -1,5 +1,6 @@
 #include "util.hh"
-
+/* bazel test //src/util/... --test_output=errors
+*/
 bool check_range(float value, float lower, float upper) {
   if (value < lower) {
     return false;
@@ -26,7 +27,7 @@ std::array<unsigned char, 4> encode_joystick(const Joystick &joystick) {
   ret[1] = static_cast<unsigned char>(std::floor(((joystick.y + 1) * 127.5)));
   ret[0] = 0;
 
-  ret[0] |= (joystick.enabled << 7);
+  ret[0] |= (joystick.enabled << 7);//0001 << 2 = 0100
   ret[0] |= (joystick.gripper_toggle << 2);
   ret[0] |= (joystick.roller_fwd << 1);
   ret[0] |= (joystick.roller_rev << 0);
@@ -53,6 +54,10 @@ decode_joystick(const std::array<unsigned char, 4> &raw) {
 
 std::array<unsigned char, 4> encode_output(const Output &raw) {
   std::array<unsigned char, 4> ret;
+  ret[3] = static_cast<unsigned char>((raw.dt_left_voltage + 12) * 254 / 24);
+  ret[2] = static_cast<unsigned char>((raw.dt_right_voltage + 12) * 254 / 24);
+  ret[1] = static_cast<unsigned char>((raw.arm_voltage + 12) * 254 / 24);
+  ret[0] = 0;
   return ret;
 }
 
