@@ -58,18 +58,23 @@ std::array<unsigned char, 4> encode_output(const Output &raw) {
   ret[2] = static_cast<unsigned char>((raw.dt_right_voltage + 12) * 254 / 24);
   ret[1] = static_cast<unsigned char>((raw.arm_voltage + 12) * 254 / 24);
   ret[0] = 0;
+  ret[0] |= raw.gripper_open << 2;
+  ret[0] |= raw.roller_forward << 1;
+  ret[0] |= raw.roller_backwards;
   return ret;
 }
 
 std::optional<Output> decode_output(const std::array<unsigned char, 4> &raw) {
-  if (raw[3] != 0xFE) {
+  if (raw[3] != 0xFE) { 
     return std::nullopt;
   }
   Output ret;
   ret.dt_left_voltage = ((raw[3] * 24) / 254) - 12;
-  ret.dt_left_voltage = ((raw[2] * 24) / 254) - 12;
-  ret.dt_left_voltage = ((raw[1] * 24) / 254) - 12;
-  ret.dt_left_voltage = raw[0];
+  ret.dt_right_voltage = ((raw[2] * 24) / 254) - 12;
+  ret.arm_voltage = ((raw[1] * 24) / 254) - 12;
+  ret.gripper_open = raw[0] & (1 << 2);
+  ret.roller_forward = raw[0] & (1 << 1);
+  ret.roller_backwards = raw[0] & 1; 
   return std::optional(ret);
 }
 

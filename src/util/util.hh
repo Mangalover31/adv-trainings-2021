@@ -36,6 +36,7 @@ struct Sensors {
 // Bits 23-16: DT Right Voltage
 // Bits 15-8 : Arm voltage
 // Bits 7-3  : Reserved
+//ret[0]
 // Bit    2  : Gripper open
 // Bit    1  : Roller forwards
 // Bit    0  : Roller reverse
@@ -45,7 +46,9 @@ struct Output {
 
   float arm_voltage;
 
-  bool gripper_open, roller_forward, roller_backwards;
+  bool gripper_open;
+  
+  bool roller_forward, roller_backwards;
 };
 
 std::array<unsigned char, 4> encode_joystick(const Joystick &joystick);
