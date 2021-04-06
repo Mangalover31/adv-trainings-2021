@@ -80,10 +80,20 @@ std::optional<Output> decode_output(const std::array<unsigned char, 4> &raw) {
 
 std::array<unsigned char, 4> encode_sensors(const Sensors &sensors) {
   std::array<unsigned char, 4> ret;
+  ret[3] = 0xAF;
+  ret[2] = ((sensors.arm_position / M_PI) * 4096);
+  ret[1] = sensors.lower_limit_on;
+  ret[0] = sensors.upper_limit_on;
   return ret;
 }
 
 std::optional<Sensors> decode_sensors(const std::array<unsigned char, 4> &raw) {
+  if (raw[3] != 0xAF) { 
+    return std::nullopt;
+  }
   Sensors ret;
+  ret.arm_position = (raw[2] * M_PI) / 4096;
+  ret.lower_limit_on = 0;
+  ret.upper_limit_on = 0;
   return std::optional(ret);
 }

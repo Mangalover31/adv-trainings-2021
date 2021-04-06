@@ -64,7 +64,7 @@ via `connect()` and **read** from it.
 
 The sensor socket consists of messages of the following form:
 
-| Header Byte | Arm Position | Reserved   | Arm lower limit | Arm upper limit | 
+| Header Byte | Arm Position | Reserved | Arm lower limit | Arm upper limit | 
 | ---- | ---- | ---- | ---- | ---- |
 | 8 bits | 12 bits | 10 bits | 1 bit | 1 bit |
 
